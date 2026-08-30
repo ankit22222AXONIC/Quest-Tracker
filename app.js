@@ -11,29 +11,16 @@
   // ==========================================
   const STORAGE_KEY = 'quest_app_ai_v2';
 
-  // Helper: get today's date string in IST (UTC+5:30)
+  // Helper: get today's date string (YYYY-MM-DD) in Indian Standard Time (Asia/Kolkata, UTC+5:30)
   function getISTDateString(timestamp) {
     const d = timestamp ? new Date(timestamp) : new Date();
-    // IST offset is +5:30 = 330 minutes
-    const istOffset = 330;
-    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-    const ist = new Date(utc + istOffset * 60000);
-    const y = ist.getFullYear();
-    const m = String(ist.getMonth() + 1).padStart(2, '0');
-    const day = String(ist.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+    return d.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
   }
 
   function getISTYesterday() {
     const now = new Date();
-    const istOffset = 330;
-    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-    const ist = new Date(utc + istOffset * 60000);
-    ist.setDate(ist.getDate() - 1);
-    const y = ist.getFullYear();
-    const m = String(ist.getMonth() + 1).padStart(2, '0');
-    const d = String(ist.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
+    const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    return yesterday.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
   }
 
   const STREAK_MIN_QUESTS = 3; // minimum quests per day to earn a streak
@@ -1090,15 +1077,11 @@
 
       // Build array of last 7 IST days (oldest first → newest/today last)
       const weekData = [];
+      const now = new Date();
       for (let offset = 6; offset >= 0; offset--) {
-        const d = new Date();
-        const istOffset = 330;
-        const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-        const ist = new Date(utc + istOffset * 60000);
-        ist.setDate(ist.getDate() - offset);
-
-        const dateStr = `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
-        const dayName = dayNames[ist.getDay()];
+        const targetDate = new Date(now.getTime() - offset * 24 * 60 * 60 * 1000);
+        const dateStr = targetDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+        const dayName = targetDate.toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' });
         const isToday = (offset === 0);
 
         // Sum focus minutes from history entries that fall on this IST date
@@ -1682,13 +1665,11 @@
     checkAchievements() {
       let newlyUnlocked = false;
 
-      // Helper to get IST hour
+      // Helper to get IST hour (0 - 23)
       function getISTHour(timestamp) {
         const d = new Date(timestamp);
-        const istOffset = 330;
-        const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-        const ist = new Date(utc + istOffset * 60000);
-        return ist.getHours();
+        const hourStr = d.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit' });
+        return parseInt(hourStr, 10);
       }
 
       state.achievements.forEach(ach => {

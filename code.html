@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html class="dark" lang="en" data-theme="indigo">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Quest - Stay Productive</title>
+  <meta name="description" content="Gamified task management and focus session tracker. Complete quests, gain XP, level up, and achieve deep work." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Material Symbols Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <!-- Custom Font & Stylesheet -->
+  <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  </style>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-background": "#e3e2e2",
+            "surface-bright": "#383939",
+            "primary-container": "#8083ff",
+            "on-tertiary-container": "#2a2a2a",
+            "tertiary": "#c8c6c5",
+            "on-tertiary-fixed-variant": "#474746",
+            "on-tertiary": "#303030",
+            "on-error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#474746",
+            "secondary": "#c8c6c5",
+            "tertiary-fixed-dim": "#c8c6c5",
+            "on-primary": "#1000a9",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-primary-fixed": "#07006c",
+            "inverse-surface": "#e3e2e2",
+            "surface-container-lowest": "#0d0e0f",
+            "background": "#121414",
+            "tertiary-fixed": "#e4e2e1",
+            "surface-container-highest": "#343535",
+            "error": "#ffb4ab",
+            "on-tertiary-fixed": "#1b1c1c",
+            "surface-variant": "#343535",
+            "on-surface": "#e3e2e2",
+            "primary-fixed": "#e1e0ff",
+            "on-surface-variant": "#c7c4d7",
+            "secondary-container": "#474746",
+            "primary": "#c0c1ff",
+            "surface-dim": "#121414",
+            "surface-container-high": "#292a2a",
+            "outline-variant": "#464554",
+            "surface-container": "#1e2020",
+            "primary-fixed-dim": "#c0c1ff",
+            "inverse-primary": "#494bd6",
+            "on-secondary-fixed": "#1b1b1c",
+            "on-secondary-container": "#b7b5b4",
+            "secondary-fixed-dim": "#c8c6c5",
+            "on-primary-container": "#0d0096",
+            "on-error": "#690005",
+            "inverse-on-surface": "#2f3131",
+            "tertiary-container": "#929090",
+            "error-container": "#93000a",
+            "surface-container-low": "#1a1c1c",
+            "secondary-fixed": "#e5e2e1",
+            "surface-tint": "#c0c1ff",
+            "outline": "#908fa0",
+            "surface": "#121414",
+            "on-secondary": "#303030"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "margin-mobile": "16px",
+            "md": "16px",
+            "2xl": "48px",
+            "3xl": "64px",
+            "gutter": "24px",
+            "xl": "32px",
+            "margin-desktop": "40px",
+            "xs": "4px",
+            "sm": "8px",
+            "lg": "24px",
+            "base": "4px"
+          },
+          fontFamily: {
+            "body-sm": ["Inter", "sans-serif"],
+            "display-lg": ["Inter", "sans-serif"],
+            "headline-md": ["Inter", "sans-serif"],
+            "headline-sm": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "headline-lg-mobile": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "headline-lg": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"]
+          },
+          fontSize: {
+            "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "display-lg": ["44px", { lineHeight: "52px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+            "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+            "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col md:flex-row select-none">
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- AI Floating Particles -->
+  <div class="ai-particle" style="left: 10%; bottom: 0; animation-duration: 18s; animation-delay: 0s;"></div>
+  <div class="ai-particle" style="left: 25%; bottom: 0; animation-duration: 22s; animation-delay: 3s; width: 2px; height: 2px;"></div>
+  <div class="ai-particle" style="left: 45%; bottom: 0; animation-duration: 15s; animation-delay: 6s; background: rgba(56, 189, 248, 0.3);"></div>
+  <div class="ai-particle" style="left: 65%; bottom: 0; animation-duration: 25s; animation-delay: 2s;"></div>
+  <div class="ai-particle" style="left: 80%; bottom: 0; animation-duration: 20s; animation-delay: 8s; width: 2px; height: 2px; background: rgba(168, 85, 247, 0.3);"></div>
+  <div class="ai-particle" style="left: 55%; bottom: 0; animation-duration: 28s; animation-delay: 5s;"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ============================================================== -->
+  <!-- SideNavBar (Desktop) -->
+  <!-- ============================================================== -->
+  <nav class="hidden md:flex flex-col h-screen p-lg bg-surface-container text-primary border-r border-surface-variant w-64 docked left-0 sticky top-0 shrink-0 z-20">
+    <!-- Brand Header -->
+    <div class="mb-lg flex items-center gap-sm cursor-pointer" onclick="App.switchView('today')">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-container to-indigo-600 flex items-center justify-center shadow-md">
+        <span class="material-symbols-outlined text-[24px] text-white">task_alt</span>
+      </div>
+      <div>
+        <div class="font-headline-md text-headline-md font-bold text-primary tracking-tight">Quest</div>
+        <div class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Stay Productive
+        </div>
+      </div>
+    </div>
+
+    <!-- User RPG Profile Widget -->
+    <div class="mb-lg p-3 rounded-xl bg-surface-container-low border border-surface-variant/70 ai-border-glow">
+      <div class="flex items-center justify-between mb-2">
+        <span id="userLevelBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">Lvl 1</span>
+        <span id="userXpText" class="text-[11px] text-on-surface-variant font-medium">0 / 100 XP</span>
+      </div>
+      <div class="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden mb-2">
+        <div id="userXpProgressBar" class="h-full bg-gradient-to-r from-primary-container to-primary rounded-full transition-all duration-500 xp-bar-shimmer" style="width: 0%"></div>
+      </div>
+      <div class="flex items-center justify-between text-xs text-on-surface-variant mb-2">
+        <span id="userRankTitle" class="truncate font-medium">Novice Adventurer</span>
+        <span class="flex items-center gap-0.5 text-amber-400 font-semibold streak-fire">
+          <span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+          <span id="userStreakCount">0d</span>
+        </span>
+      </div>
+      <!-- Daily Streak Progress -->
+      <div id="streakDailyProgress" class="text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
+        <span>0/3 quests for streak</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu Links -->
+    <div class="flex-1 space-y-1">
+      <a href="#" data-nav-target="today" class="desktop-nav-link flex items-center gap-sm bg-secondary-container text-on-secondary-container rounded-lg px-md py-sm border-l-4 border-primary font-label-md text-label-md hover:bg-surface-container-highest transition-all duration-150 scale-100 opacity-100 font-semibold">
+        <span class="material-symbols-outlined text-[20px]" data-icon="today">today</span>
+        Today
+      </a>
+
+      <a href="#" data-nav-target="focus" class="desktop-nav-link flex items-center justify-between text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm font-label-md text-label-md hover:text-primary transition-colors duration-200">
+        <div class="flex items-center gap-sm">
+          <span class="material-symbols-outlined text-[20px]" data-icon="timer">timer</span>
+          Focus Mode
+        </div>
+        <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">Timer</span>
+      </a>
+
+      <a href="#" data-nav-target="history" class="desktop-nav-link flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm font-label-md text-label-md hover:text-primary transition-colors duration-200">
+        <span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+        History & Stats
+      </a>
+
+      <a href="#" data-nav-target="settings" class="desktop-nav-link flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm font-label-md text-label-md hover:text-primary transition-colors duration-200">
+        <span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+        Settings
+      </a>
+    </div>
+
+    <!-- Quick Focus Metric Pill -->
+    <div class="py-2 px-3 rounded-lg bg-surface-container-high/40 border border-surface-variant/40 mb-3 flex items-center justify-between text-xs text-on-surface-variant">
+      <span class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+        Today's Focus
+      </span>
+      <span id="userTodayFocus" class="font-bold text-on-surface">145m</span>
+    </div>
+
+    <!-- Create Quest CTA -->
+    <button onclick="App.openCreateModal()" class="w-full bg-primary-container text-on-primary-container hover:bg-primary-fixed py-md rounded-lg font-label-md text-label-md transition-all flex items-center justify-center gap-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 font-semibold">
+      <span class="material-symbols-outlined text-[20px]">add</span>
+      Create Quest
+    </button>
+  </nav>
+
+  <!-- ============================================================== -->
+  <!-- Main Application Wrapper -->
+  <!-- ============================================================== -->
+  <div class="flex-1 flex flex-col min-w-0 min-h-screen bg-background">
+    <!-- TopNavBar (Mobile) -->
+    <header class="md:hidden flex justify-between items-center w-full px-margin-mobile h-16 bg-surface-container border-b border-surface-variant sticky top-0 z-30">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="App.switchView('today')">
+        <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px] text-white">task_alt</span>
+        </div>
+        <span class="font-headline-sm text-headline-sm font-bold text-primary">Quest</span>
+      </div>
+
+      <!-- Mobile Top Tabs -->
+      <nav class="flex gap-sm h-full items-center">
+        <a href="#" data-nav-target="today" class="mobile-nav-link font-label-md text-label-md text-primary font-bold border-b-2 border-primary pb-1">Today</a>
+        <a href="#" data-nav-target="focus" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Focus</a>
+        <a href="#" data-nav-target="history" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Stats</a>
+        <a href="#" data-nav-target="settings" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Settings</a>
+      </nav>
+    </header>
+
+    <!-- Main Content Views Container -->
+    <main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto pb-24 md:pb-12 max-w-7xl w-full mx-auto">
+
+      <!-- ========================================================== -->
+      <!-- VIEW 1: TODAY (Dashboard) -->
+      <!-- ========================================================== -->
+      <section id="view-today" class="view-section active">
+        <!-- View Header -->
+        <header class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 class="font-display-lg text-display-lg mb-xs tracking-tight text-on-surface">Today</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">What do you want to conquer next?</p>
+          </div>
+
+          <!-- Quick Search & Actions -->
+          <div class="flex items-center gap-2 max-w-md w-full md:w-auto">
+            <div class="relative flex-1 md:w-64">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
+              <input id="questSearchInput" type="text" placeholder="Search quests..." class="w-full bg-surface-container border border-surface-variant rounded-xl pl-9 pr-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+            </div>
+            <button onclick="App.openCreateModal()" class="hidden md:flex items-center gap-1.5 px-4 py-2 bg-primary-container text-on-primary-container rounded-xl text-sm font-semibold hover:bg-primary-fixed transition-all hover:scale-105 shadow">
+              <span class="material-symbols-outlined text-[18px]">add</span> New
+            </button>
+          </div>
+        </header>
+
+        <!-- Category Filters -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-lg no-scrollbar">
+          <button data-filter-category="all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary-container whitespace-nowrap transition-all">
+            All Quests
+          </button>
+          <button data-filter-category="study" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            📚 Study
+          </button>
+          <button data-filter-category="work" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            💼 Work
+          </button>
+          <button data-filter-category="coding" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            💻 Coding
+          </button>
+          <button data-filter-category="creative" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            🎨 Creative
+          </button>
+          <button data-filter-category="health" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            🏃 Health
+          </button>
+          <button data-filter-category="personal" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all">
+            🌱 Personal
+          </button>
+        </div>
+
+        <div class="space-y-2xl">
+          <!-- Active Quests Section -->
+          <section>
+            <div class="flex items-center justify-between mb-md border-b border-surface-variant pb-xs">
+              <h2 class="font-headline-sm text-headline-sm text-surface-tint flex items-center gap-2">
+                <span>Active</span>
+                <span id="activeQuestCount" class="text-sm font-normal text-on-surface-variant">(0)</span>
+              </h2>
+              <span class="text-xs text-on-surface-variant">Press <kbd class="px-1.5 py-0.5 rounded bg-surface-container border border-surface-variant text-[10px]">C</kbd> to add quest</span>
+            </div>
+
+            <!-- Active Quests Grid -->
+            <div id="activeQuestsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+              <!-- Dynamically rendered cards -->
+            </div>
+
+            <!-- Empty State for Active Quests -->
+            <div id="activeQuestsEmpty" class="hidden text-center py-16 px-4 bg-surface-container-low rounded-2xl border border-surface-variant border-dashed">
+              <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[32px]">checklist_rtl</span>
+              </div>
+              <h3 class="text-lg font-semibold text-on-surface mb-1">No Active Quests Found</h3>
+              <p class="text-sm text-on-surface-variant max-w-sm mx-auto mb-4">You've cleared everything or have no quests matching this filter.</p>
+              <button onclick="App.openCreateModal()" class="px-4 py-2 bg-primary-container text-on-primary-container rounded-xl text-sm font-semibold hover:bg-primary-fixed transition-all inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">add</span> Create New Quest
+              </button>
+            </div>
+          </section>
+
+          <!-- Completed Quests Section -->
+          <section>
+            <div class="flex items-center justify-between mb-md border-b border-surface-variant pb-xs">
+              <h2 class="font-headline-sm text-headline-sm text-on-surface-variant flex items-center gap-2">
+                <span>Completed Today</span>
+                <span id="completedQuestCount" class="text-sm font-normal text-on-surface-variant">(0)</span>
+              </h2>
+            </div>
+
+            <!-- Completed List -->
+            <div id="completedQuestsContainer" class="flex flex-col gap-sm">
+              <!-- Dynamically populated -->
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ========================================================== -->
+      <!-- VIEW 2: FOCUS MODE (Timer & Deep Work) -->
+      <!-- ========================================================== -->
+      <section id="view-focus" class="view-section">
+        <div class="max-w-3xl mx-auto flex flex-col items-center">
+
+          <!-- Focus Header & Status -->
+          <div class="w-full flex items-center justify-between mb-lg">
+            <button onclick="App.switchView('today')" class="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-on-surface px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors">
+              <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+              Back to Quests
+            </button>
+            <div id="focusModeLabel" class="text-xs uppercase tracking-widest font-semibold px-3 py-1 rounded-full bg-primary-container/30 text-primary border border-primary/30">
+              FOCUS SESSION
+            </div>
+            <div class="w-20"></div>
+          </div>
+
+          <!-- Active Quest Banner -->
+          <div class="w-full p-4 rounded-2xl glass-panel text-center mb-8 border border-surface-variant/60 shadow-lg">
+            <div id="focusQuestCategory" class="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Study • Normal Priority</div>
+            <h2 id="focusQuestTitle" class="text-2xl font-bold text-on-surface">Finish Maths homework</h2>
+          </div>
+
+          <!-- Circular SVG Countdown Timer -->
+          <div class="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center mb-8">
+            <svg class="w-full h-full" viewBox="0 0 300 300">
+              <!-- Background track circle -->
+              <circle
+                cx="150"
+                cy="150"
+                r="130"
+                stroke="rgba(56, 57, 57, 0.4)"
+                stroke-width="12"
+                fill="none"
+              />
+              <!-- Animated Progress circle -->
+              <circle
+                id="timerRingCircle"
+                class="timer-ring-circle"
+                cx="150"
+                cy="150"
+                r="130"
+                stroke="#8083ff"
+                stroke-width="12"
+                stroke-linecap="round"
+                fill="none"
+                style="stroke-dasharray: 816.81 816.81; stroke-dashoffset: 0;"
+              />
+            </svg>
+
+            <!-- Center Time Display -->
+            <div class="absolute flex flex-col items-center justify-center text-center">
+              <div id="focusTimerDisplay" class="text-5xl sm:text-6xl font-extrabold tracking-tighter text-on-surface font-mono">
+                25:00
+              </div>
+              <div class="text-xs text-on-surface-variant mt-2 font-medium tracking-wide flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px] text-amber-400">bolt</span>
+                Deep Focus
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Timer Action Buttons -->
+          <div class="flex items-center gap-4 mb-8">
+            <button id="timerResetBtn" title="Reset Timer" class="w-12 h-12 rounded-full bg-surface-container border border-surface-variant text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all hover:scale-105 active:scale-95">
+              <span class="material-symbols-outlined text-[22px]">replay</span>
+            </button>
+
+            <button id="timerStartBtn" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-indigo-600 text-white font-bold text-lg hover:opacity-90 transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 glow-primary">
+              <span class="material-symbols-outlined text-[24px]">play_arrow</span>
+              Start Focus
+            </button>
+
+            <button id="timerPauseBtn" class="hidden px-8 py-3.5 rounded-full bg-amber-500 text-on-primary font-bold text-lg hover:bg-amber-400 transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[24px]">pause</span>
+              Pause
+            </button>
+          </div>
+
+          <!-- Ambient Audio & Sound Synthesizer Controls -->
+          <div class="w-full max-w-md p-4 rounded-2xl bg-surface-container border border-surface-variant mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">graphic_eq</span>
+                <span class="text-sm font-semibold text-on-surface">Ambient Focus Audio</span>
+              </div>
+              <div id="ambientSoundWave" class="hidden flex items-center gap-1 h-5">
+                <div class="sound-wave-bar"></div>
+                <div class="sound-wave-bar"></div>
+                <div class="sound-wave-bar"></div>
+                <div class="sound-wave-bar"></div>
+                <div class="sound-wave-bar"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <select id="ambientSoundSelect" class="bg-[#252525] border border-[#383939] text-on-surface text-xs rounded-lg px-3 py-2 outline-none focus:border-primary">
+                <option value="none">🔇 Sound Off</option>
+                <option value="rain">🌧️ Soothing Rain</option>
+                <option value="brown">🌊 Deep Focus (Brown Noise)</option>
+                <option value="white">💨 Crisp White Noise</option>
+                <option value="hum">🧘 432Hz Meditative Hum</option>
+              </select>
+
+              <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-[16px]">volume_up</span>
+                <input id="settingSoundVolume" type="range" min="0" max="100" value="70" oninput="App.saveSettingsFromForm()" class="w-full accent-primary h-1 bg-surface-variant rounded cursor-pointer">
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Quest Subtasks in Focus View -->
+          <div class="w-full max-w-md p-4 rounded-2xl bg-surface-container-low border border-surface-variant">
+            <div class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2 flex items-center justify-between">
+              <span>Quest Subtasks</span>
+              <span class="text-[11px] text-primary">Live Checklist</span>
+            </div>
+            <div id="focusSubtasksContainer" class="space-y-2">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================================== -->
+      <!-- VIEW 3: HISTORY & ANALYTICS -->
+      <!-- ========================================================== -->
+      <section id="view-history" class="view-section">
+        <header class="mb-xl">
+          <h1 class="font-display-lg text-display-lg mb-xs tracking-tight text-on-surface">History & Stats</h1>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">Track your growth, focus records, and achievements.</p>
+        </header>
+
+        <!-- Top Metrics Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-xl">
+          <div class="p-4 rounded-2xl bg-surface-container border border-surface-variant">
+            <div class="text-xs text-on-surface-variant font-medium mb-1">Total Focus Time</div>
+            <div id="statsTotalMinutes" class="text-2xl font-bold text-primary">145m</div>
+            <div class="text-[11px] text-emerald-400 flex items-center gap-0.5 mt-1">
+              <span class="material-symbols-outlined text-[14px]">trending_up</span> +35m today
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-surface-container border border-surface-variant">
+            <div class="text-xs text-on-surface-variant font-medium mb-1">Quests Conquered</div>
+            <div id="statsCompletedCount" class="text-2xl font-bold text-on-surface">5</div>
+            <div class="text-[11px] text-on-surface-variant mt-1">100% completion rate</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-surface-container border border-surface-variant">
+            <div class="text-xs text-on-surface-variant font-medium mb-1">Current Streak</div>
+            <div id="statsCurrentStreak" class="text-2xl font-bold text-amber-400">3 Days</div>
+            <div class="text-[11px] text-amber-300/80 flex items-center gap-0.5 mt-1">
+              <span class="material-symbols-outlined text-[14px]">local_fire_department</span> Keep it burning!
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-surface-container border border-surface-variant">
+            <div class="text-xs text-on-surface-variant font-medium mb-1">Total Experience</div>
+            <div id="statsTotalXp" class="text-2xl font-bold text-yellow-300">240 XP</div>
+            <div class="text-[11px] text-on-surface-variant mt-1">Level 2 Adventurer</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+          <!-- Weekly Activity Chart -->
+          <div class="lg:col-span-2 p-5 rounded-2xl bg-surface-container border border-surface-variant flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Weekly Focus Activity</h3>
+                <p class="text-xs text-on-surface-variant">Focus minutes recorded over the last 7 days</p>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded bg-primary-container/20 text-primary border border-primary/30">This Week</span>
+            </div>
+
+            <!-- Visual Bar Chart Container -->
+            <div id="weeklyActivityChart" class="flex items-end gap-2 sm:gap-4 h-40 pt-4 pb-2">
+              <!-- Dynamically populated bars -->
+            </div>
+          </div>
+
+          <!-- Achievements Showcase -->
+          <div class="p-5 rounded-2xl bg-surface-container border border-surface-variant">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-headline-sm text-headline-sm text-on-surface">Achievements</h3>
+              <span class="text-xs text-on-surface-variant">3 Unlocked</span>
+            </div>
+            <div id="achievementsList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Completed Quest Log -->
+        <div class="mt-xl">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-md border-b border-surface-variant pb-xs">Quest History Log</h3>
+          <div id="historyLogList" class="space-y-2">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================== -->
+      <!-- VIEW 4: SETTINGS -->
+      <!-- ========================================================== -->
+      <section id="view-settings" class="view-section">
+        <header class="mb-xl">
+          <h1 class="font-display-lg text-display-lg mb-xs tracking-tight text-on-surface">Settings</h1>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">Customize your timers, audio preferences, and app backups.</p>
+        </header>
+
+        <div class="max-w-2xl space-y-6">
+          <!-- Timer Durations Configuration -->
+          <div class="p-5 rounded-2xl bg-surface-container border border-surface-variant space-y-4">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">timer</span>
+              Timer Preferences
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs text-on-surface-variant mb-1 font-medium">Focus Duration (min)</label>
+                <input id="settingFocusDuration" type="number" min="5" max="120" value="25" onchange="App.saveSettingsFromForm()" class="w-full bg-[#252525] border border-[#383939] rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary">
+              </div>
+              <div>
+                <label class="block text-xs text-on-surface-variant mb-1 font-medium">Short Break (min)</label>
+                <input id="settingShortBreak" type="number" min="1" max="30" value="5" onchange="App.saveSettingsFromForm()" class="w-full bg-[#252525] border border-[#383939] rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary">
+              </div>
+              <div>
+                <label class="block text-xs text-on-surface-variant mb-1 font-medium">Long Break (min)</label>
+                <input id="settingLongBreak" type="number" min="5" max="60" value="15" onchange="App.saveSettingsFromForm()" class="w-full bg-[#252525] border border-[#383939] rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-surface-variant/40">
+              <div>
+                <div class="text-sm font-medium text-on-surface">Auto-start Breaks</div>
+                <div class="text-xs text-on-surface-variant">Automatically begin break timer when focus completes</div>
+              </div>
+              <input id="settingAutoStartBreaks" type="checkbox" onchange="App.saveSettingsFromForm()" class="rounded border-outline text-primary focus:ring-primary w-5 h-5 cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Sound & Feedback Configuration -->
+          <div class="p-5 rounded-2xl bg-surface-container border border-surface-variant space-y-4">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">volume_up</span>
+              Sound & Audio
+            </h3>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-on-surface">Sound Effects</div>
+                <div class="text-xs text-on-surface-variant">Play audio chimes for completions, level ups, and button clicks</div>
+              </div>
+              <input id="settingSoundEffects" type="checkbox" checked onchange="App.saveSettingsFromForm()" class="rounded border-outline text-primary focus:ring-primary w-5 h-5 cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Theme Accent Configuration -->
+          <div class="p-5 rounded-2xl bg-surface-container border border-surface-variant space-y-3">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">palette</span>
+              Theme Accent
+            </h3>
+            <p class="text-xs text-on-surface-variant">Choose your preferred mystical accent palette</p>
+
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button data-theme-choice="indigo" onclick="App.applyTheme('indigo')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1e2020] border border-[#383939] text-xs font-semibold text-on-surface hover:border-primary transition-all">
+                <span class="w-3.5 h-3.5 rounded-full bg-[#8083ff]"></span> Midnight Indigo
+              </button>
+              <button data-theme-choice="emerald" onclick="App.applyTheme('emerald')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1e2020] border border-[#383939] text-xs font-semibold text-on-surface hover:border-primary transition-all">
+                <span class="w-3.5 h-3.5 rounded-full bg-[#10b981]"></span> Emerald Forest
+              </button>
+              <button data-theme-choice="crimson" onclick="App.applyTheme('crimson')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1e2020] border border-[#383939] text-xs font-semibold text-on-surface hover:border-primary transition-all">
+                <span class="w-3.5 h-3.5 rounded-full bg-[#f43f5e]"></span> Cyber Crimson
+              </button>
+              <button data-theme-choice="amber" onclick="App.applyTheme('amber')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1e2020] border border-[#383939] text-xs font-semibold text-on-surface hover:border-primary transition-all">
+                <span class="w-3.5 h-3.5 rounded-full bg-[#f59e0b]"></span> Sunset Gold
+              </button>
+            </div>
+          </div>
+
+          <!-- Data Backup, Export & Reset -->
+          <div class="p-5 rounded-2xl bg-surface-container border border-surface-variant space-y-4">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">database</span>
+              Data Management
+            </h3>
+
+            <div class="flex flex-wrap gap-3">
+              <button onclick="App.exportData()" class="px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest border border-surface-variant text-on-surface rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                <span class="material-symbols-outlined text-[16px]">download</span> Export Backup (JSON)
+              </button>
+
+              <label class="px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest border border-surface-variant text-on-surface rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors">
+                <span class="material-symbols-outlined text-[16px]">upload</span> Restore from JSON
+                <input type="file" accept=".json" onchange="App.importData(event)" class="hidden">
+              </label>
+
+              <button onclick="App.resetToDefaultData()" class="px-4 py-2 bg-error/10 hover:bg-error/20 border border-error/30 text-error rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ml-auto">
+                <span class="material-symbols-outlined text-[16px]">restart_alt</span> Reset All
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Mobile Floating Action Button (FAB) -->
+    <button onclick="App.openCreateModal()" class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-30 glow-primary">
+      <span class="material-symbols-outlined text-[28px]">add</span>
+    </button>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- Create / Edit Quest Modal -->
+  <!-- ============================================================== -->
+  <div id="createModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-margin-mobile">
+    <!-- Backdrop Blur -->
+    <div class="absolute inset-0 bg-background/80 backdrop-blur-md" onclick="App.closeModals()"></div>
+
+    <!-- Modal Content Window -->
+    <div class="bg-[#1e1e1e] border border-[#333333] rounded-2xl w-full max-w-lg relative z-10 flex flex-col shadow-2xl overflow-hidden max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="p-lg border-b border-[#333333] flex justify-between items-center bg-[#252525]">
+        <h2 id="modalTitle" class="font-headline-md text-headline-md font-bold text-on-surface">Create a Quest</h2>
+        <button onclick="App.closeModals()" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-variant transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-lg space-y-5 flex-1 overflow-y-auto">
+        <!-- Title Field -->
+        <div class="space-y-1.5">
+          <label class="font-label-md text-label-md block text-on-surface-variant font-medium">Quest Objective</label>
+          <input id="questTitleInput" type="text" placeholder="e.g. Finish Calculus Chapter 4 Exercises" class="w-full bg-[#252525] border border-[#383939] rounded-xl px-md py-2.5 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none placeholder:text-outline/70">
+        </div>
+
+        <!-- Category & Priority Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="font-label-md text-label-md block text-on-surface-variant font-medium">Category</label>
+            <select id="questCategorySelect" class="w-full bg-[#252525] border border-[#383939] rounded-xl px-md py-2.5 text-sm text-on-surface outline-none focus:border-primary">
+              <option value="Study">📚 Study</option>
+              <option value="Work">💼 Work</option>
+              <option value="Coding">💻 Coding</option>
+              <option value="Creative">🎨 Creative</option>
+              <option value="Health">🏃 Health</option>
+              <option value="Personal">🌱 Personal</option>
+            </select>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="font-label-md text-label-md block text-on-surface-variant font-medium">Priority Level</label>
+            <div class="grid grid-cols-4 gap-1">
+              <button type="button" data-priority-select="Low" class="py-2 text-[11px] font-semibold rounded-lg bg-[#252525] border border-[#383939] text-emerald-400 hover:bg-surface-variant transition-all text-center">Low</button>
+              <button type="button" data-priority-select="Medium" class="py-2 text-[11px] font-semibold rounded-lg bg-[#252525] border border-[#383939] text-sky-400 ring-2 ring-primary bg-surface-container-highest hover:bg-surface-variant transition-all text-center">Med</button>
+              <button type="button" data-priority-select="High" class="py-2 text-[11px] font-semibold rounded-lg bg-[#252525] border border-[#383939] text-amber-400 hover:bg-surface-variant transition-all text-center">High</button>
+              <button type="button" data-priority-select="Legendary" class="py-2 text-[11px] font-semibold rounded-lg bg-[#252525] border border-[#383939] text-purple-400 hover:bg-surface-variant transition-all text-center">Epic</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duration Selection -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="font-label-md text-label-md block text-on-surface-variant font-medium">Focus Duration</label>
+            <span id="modalXpPreview" class="text-xs font-semibold text-amber-400">+60 XP upon completion</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" data-duration-preset="15" class="bg-[#252525] border border-[#333333] text-on-surface px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">15 min</button>
+            <button type="button" data-duration-preset="30" class="bg-primary-container text-on-primary-container border border-primary-container px-md py-sm rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-colors">30 min</button>
+            <button type="button" data-duration-preset="45" class="bg-[#252525] border border-[#333333] text-on-surface px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">45 min</button>
+            <button type="button" data-duration-preset="60" class="bg-[#252525] border border-[#333333] text-on-surface px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">60 min</button>
+            <button type="button" data-duration-preset="custom" class="bg-[#252525] border border-[#333333] text-on-surface px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs">
+              <span class="material-symbols-outlined text-[16px]">tune</span> Custom
+            </button>
+          </div>
+
+          <input id="customDurationInput" type="number" min="1" max="180" placeholder="Custom minutes (e.g. 90)" class="hidden w-full mt-2 bg-[#252525] border border-[#383939] rounded-lg px-3 py-2 text-sm text-on-surface outline-none focus:border-primary">
+        </div>
+
+        <!-- Subtasks Creator -->
+        <div class="space-y-2 pt-2 border-t border-[#333333]">
+          <div class="flex items-center justify-between">
+            <label class="font-label-md text-label-md block text-on-surface-variant font-medium">Subtasks & Milestones</label>
+            <button type="button" onclick="App.addModalSubtask()" class="text-xs text-primary hover:text-primary-fixed flex items-center gap-1 font-semibold">
+              <span class="material-symbols-outlined text-[16px]">add</span> Add Subtask
+            </button>
+          </div>
+          <div id="modalSubtasksList" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+            <!-- Dynamically populated subtask items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="p-lg border-t border-[#333333] flex justify-end gap-md bg-[#1e1e1e]">
+        <button onclick="App.closeModals()" class="px-md py-sm font-label-md text-label-md text-on-surface hover:bg-surface-variant rounded-lg transition-colors border border-transparent">
+          Cancel
+        </button>
+        <button id="modalSubmitBtn" onclick="App.saveQuestFromModal()" class="px-lg py-sm font-label-md text-label-md bg-gradient-to-r from-primary-container to-indigo-600 text-white font-semibold hover:opacity-90 rounded-lg transition-all shadow-md">
+          Create Quest
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Logic Script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+/* Quest Web Application - AI-Inspired Premium Styles & Animations */
+
+/* ============================================
+   AI BACKGROUND: Animated Mesh Gradient + Grid
+   ============================================ */
+body {
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 30%, rgba(128, 131, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 60% at 50% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+  animation: mesh-drift 20s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(128, 131, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(128, 131, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  pointer-events: none;
+}
+
+@keyframes mesh-drift {
+  0% {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 30%, rgba(128, 131, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 60% at 50% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse 70% 60% at 40% 60%, rgba(99, 102, 241, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 60% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 30% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 131, 255, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 131, 255, 0.45);
+}
+
+/* No-scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ============================================
+   VIEW TRANSITIONS
+   ============================================ */
+.view-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-section.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   GLASSMORPHISM
+   ============================================ */
+.glass-panel {
+  background: rgba(24, 26, 27, 0.65);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(128, 131, 255, 0.08);
+}
+
+.glass-modal {
+  background: rgba(20, 22, 24, 0.92);
+  backdrop-filter: blur(32px) saturate(1.4);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  border: 1px solid rgba(128, 131, 255, 0.1);
+}
+
+/* ============================================
+   AI GLOW / NEON EFFECTS
+   ============================================ */
+.glow-primary {
+  box-shadow:
+    0 0 20px -4px rgba(128, 131, 255, 0.3),
+    0 0 60px -8px rgba(128, 131, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glow-accent {
+  box-shadow:
+    0 0 16px -2px rgba(99, 102, 241, 0.35),
+    0 0 40px -6px rgba(99, 102, 241, 0.1);
+}
+
+.glow-xp {
+  box-shadow:
+    0 0 12px rgba(234, 179, 8, 0.3),
+    0 0 30px -4px rgba(234, 179, 8, 0.1);
+}
+
+.glow-emerald {
+  box-shadow:
+    0 0 16px -2px rgba(16, 185, 129, 0.3),
+    0 0 40px -6px rgba(16, 185, 129, 0.1);
+}
+
+/* AI Scanning Line Effect on cards hover */
+.ai-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-card::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(128, 131, 255, 0.6), transparent);
+  transition: none;
+  opacity: 0;
+  z-index: 5;
+}
+
+.ai-card:hover::before {
+  animation: ai-scan 1.5s ease-in-out;
+  opacity: 1;
+}
+
+@keyframes ai-scan {
+  0% { top: -2px; }
+  100% { top: calc(100% + 2px); }
+}
+
+/* AI border glow on hover */
+.ai-border-glow {
+  position: relative;
+}
+
+.ai-border-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(128, 131, 255, 0.3), transparent 40%, transparent 60%, rgba(56, 189, 248, 0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ai-border-glow:hover::after {
+  opacity: 1;
+}
+
+/* ============================================
+   CIRCULAR TIMER
+   ============================================ */
+.timer-ring-circle {
+  transition: stroke-dashoffset 0.5s linear, stroke 0.3s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 0 8px rgba(128, 131, 255, 0.4));
+}
+
+/* Timer pulse when running */
+.timer-active-glow {
+  animation: timer-glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes timer-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(128, 131, 255, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(128, 131, 255, 0.7));
+  }
+}
+
+/* ============================================
+   PULSE & PARTICLE ANIMATIONS
+   ============================================ */
+@keyframes soft-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.92; }
+}
+
+.animate-pulse-subtle {
+  animation: soft-pulse 4s ease-in-out infinite;
+}
+
+/* Floating particles (CSS-only) */
+@keyframes float-up {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+
+.ai-particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(128, 131, 255, 0.4);
+  pointer-events: none;
+  z-index: -1;
+  animation: float-up linear infinite;
+}
+
+/* Pulsing status dot */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+
+.status-dot-pulse {
+  animation: dot-pulse 2.5s ease-in-out infinite;
+}
+
+/* ============================================
+   SOUND WAVE BARS
+   ============================================ */
+@keyframes wave-bar {
+  0%, 100% { height: 3px; }
+  50% { height: 20px; }
+}
+
+.sound-wave-bar {
+  width: 3px;
+  background: linear-gradient(to top, #8083ff, #38bdf8);
+  border-radius: 2px;
+  animation: wave-bar 1.2s ease-in-out infinite;
+}
+.sound-wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.sound-wave-bar:nth-child(3) { animation-delay: 0.4s; }
+.sound-wave-bar:nth-child(4) { animation-delay: 0.15s; }
+.sound-wave-bar:nth-child(5) { animation-delay: 0.35s; }
+
+/* ============================================
+   BADGE SHINE & ACHIEVEMENT UNLOCK
+   ============================================ */
+.badge-shine {
+  position: relative;
+  overflow: hidden;
+}
+.badge-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 65%
+  );
+  transform: translateX(-100%);
+  animation: shine 5s infinite;
+}
+
+@keyframes shine {
+  0%, 75% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Achievement unlock glow ring */
+.achievement-unlocked {
+  position: relative;
+}
+
+.achievement-unlocked::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    rgba(128, 131, 255, 0.5),
+    rgba(56, 189, 248, 0.3),
+    rgba(168, 85, 247, 0.3),
+    rgba(128, 131, 255, 0.5)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  animation: rotate-border 4s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotate-border {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   STREAK FIRE GLOW
+   ============================================ */
+.streak-fire {
+  text-shadow: 0 0 8px rgba(251, 146, 60, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(100%) scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.92) translateY(8px); }
+}
+
+.toast-enter {
+  animation: slide-in-bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-exit {
+  animation: fade-out 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================
+   AI NAV INDICATOR
+   ============================================ */
+.nav-ai-indicator {
+  position: relative;
+}
+
+.nav-ai-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(180deg, #8083ff, #38bdf8);
+  box-shadow: 0 0 8px rgba(128, 131, 255, 0.5);
+}
+
+/* ============================================
+   CONFETTI CANVAS
+   ============================================ */
+#confettiCanvas {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+
+/* ============================================
+   AI STREAK INFO BANNER
+   ============================================ */
+.streak-info-banner {
+  background:
+    linear-gradient(135deg, rgba(251, 146, 60, 0.08) 0%, rgba(245, 158, 11, 0.04) 50%, transparent 100%);
+  border: 1px solid rgba(251, 146, 60, 0.15);
+}
+
+/* ============================================
+   XP PROGRESS BAR SHIMMER
+   ============================================ */
+.xp-bar-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.xp-bar-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: xp-shimmer 2.5s infinite;
+}
+
+@keyframes xp-shimmer {
+  0% { left: -50%; }
+  100% { left: 150%; }
+}
+
+/* ============================================
+   MISC UTILITIES
+   ============================================ */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Keyboard shortcut tag */
+kbd {
+  font-family: 'Inter', monospace;
+  font-size: 10px;
+}

@@ -181,6 +181,14 @@
         Today
       </a>
 
+      <a href="#" data-nav-target="future" class="desktop-nav-link flex items-center justify-between text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm font-label-md text-label-md hover:text-primary transition-colors duration-200">
+        <div class="flex items-center gap-sm">
+          <span class="material-symbols-outlined text-[20px]" data-icon="rocket_launch">rocket_launch</span>
+          Future Goals
+        </div>
+        <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">Vault</span>
+      </a>
+
       <a href="#" data-nav-target="focus" class="desktop-nav-link flex items-center justify-between text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm font-label-md text-label-md hover:text-primary transition-colors duration-200">
         <div class="flex items-center gap-sm">
           <span class="material-symbols-outlined text-[20px]" data-icon="timer">timer</span>
@@ -232,6 +240,7 @@
       <!-- Mobile Top Tabs -->
       <nav class="flex gap-sm h-full items-center">
         <a href="#" data-nav-target="today" class="mobile-nav-link font-label-md text-label-md text-primary font-bold border-b-2 border-primary pb-1">Today</a>
+        <a href="#" data-nav-target="future" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Future</a>
         <a href="#" data-nav-target="focus" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Focus</a>
         <a href="#" data-nav-target="history" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Stats</a>
         <a href="#" data-nav-target="settings" class="mobile-nav-link font-label-md text-label-md text-on-surface-variant font-medium pb-[6px]">Settings</a>
@@ -263,6 +272,22 @@
             </button>
           </div>
         </header>
+
+        <!-- Goal Vault Notice Banner (if future goals exist) -->
+        <div id="todayGoalVaultBanner" class="hidden mb-6 p-4 rounded-xl glass-panel border border-primary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary/20 text-primary border border-primary/30 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-on-surface">Goal Vault Available</h4>
+              <p class="text-xs text-on-surface-variant">You have <span id="todayVaultCount" class="font-bold text-primary">0</span> future goals waiting in your vault. Move any goal to Today whenever ready!</p>
+            </div>
+          </div>
+          <button onclick="App.switchView('future')" class="px-3.5 py-1.5 bg-primary/20 hover:bg-primary-container text-primary hover:text-on-primary-container rounded-lg text-xs font-semibold border border-primary/30 transition-all shrink-0 flex items-center gap-1">
+            Browse Vault <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+          </button>
+        </div>
 
         <!-- Category Filters -->
         <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-lg no-scrollbar">
@@ -332,6 +357,63 @@
               <!-- Dynamically populated -->
             </div>
           </section>
+        </div>
+      </section>
+
+      <!-- ========================================================== -->
+      <!-- VIEW 1.5: FUTURE GOALS (Vault & Roadmap) -->
+      <!-- ========================================================== -->
+      <section id="view-future" class="view-section">
+        <!-- View Header -->
+        <header class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <h1 class="font-display-lg text-display-lg tracking-tight text-on-surface">Future Goals</h1>
+              <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">Goal Vault</span>
+            </div>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Set your upcoming ambitions & pick any goal to implement for Today.</p>
+          </div>
+
+          <!-- Quick Search & Actions -->
+          <div class="flex items-center gap-2 max-w-md w-full md:w-auto">
+            <div class="relative flex-1 md:w-64">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
+              <input id="futureSearchInput" type="text" placeholder="Search future goals..." class="w-full bg-surface-container border border-surface-variant rounded-xl pl-9 pr-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+            </div>
+            <button onclick="App.openCreateModal(null, true)" class="flex items-center gap-1.5 px-4 py-2 bg-primary-container text-on-primary-container rounded-xl text-sm font-semibold hover:bg-primary-fixed transition-all hover:scale-105 shadow">
+              <span class="material-symbols-outlined text-[18px]">add</span> New Goal
+            </button>
+          </div>
+        </header>
+
+        <!-- Category Filter Pills for Future Goals -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
+          <button data-future-filter="all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary-container border border-primary-container transition-all shrink-0">
+            All Goals
+          </button>
+          <button data-future-filter="Study" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">📚 Study</button>
+          <button data-future-filter="Work" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">💼 Work</button>
+          <button data-future-filter="Coding" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">💻 Coding</button>
+          <button data-future-filter="Creative" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">🎨 Creative</button>
+          <button data-future-filter="Health" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">🏃 Health</button>
+          <button data-future-filter="Personal" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant border border-surface-variant hover:border-outline transition-all shrink-0">🌱 Personal</button>
+        </div>
+
+        <!-- Future Goals Grid -->
+        <div id="futureGoalsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+          <!-- Dynamically rendered future goals cards -->
+        </div>
+
+        <!-- Empty State for Future Goals -->
+        <div id="futureGoalsEmpty" class="hidden text-center py-16 px-4 bg-surface-container-low rounded-2xl border border-surface-variant border-dashed">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined text-[32px]">rocket_launch</span>
+          </div>
+          <h3 class="text-lg font-semibold text-on-surface mb-1">Your Goal Vault is Empty</h3>
+          <p class="text-sm text-on-surface-variant max-w-sm mx-auto mb-4">Set long-term plans or future ambitions here. Pick any goal whenever you're ready to implement it for Today!</p>
+          <button onclick="App.openCreateModal(null, true)" class="px-4 py-2 bg-primary-container text-on-primary-container rounded-xl text-sm font-semibold hover:bg-primary-fixed transition-all inline-flex items-center gap-1">
+            <span class="material-symbols-outlined text-[18px]">add</span> Add First Future Goal
+          </button>
         </div>
       </section>
 
@@ -734,6 +816,21 @@
           <div id="modalSubtasksList" class="space-y-2 max-h-36 overflow-y-auto pr-1">
             <!-- Dynamically populated subtask items -->
           </div>
+        </div>
+
+        <!-- Save to Future Goals Vault Toggle -->
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[#252525] border border-[#383939] mt-2">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-primary text-[20px]">rocket_launch</span>
+            <div>
+              <span class="text-xs font-semibold block text-on-surface">Save to Future Goals Vault</span>
+              <span class="text-[11px] text-on-surface-variant">Store in future vault instead of starting Today</span>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="questIsFutureCheckbox" type="checkbox" class="sr-only peer">
+            <div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+          </label>
         </div>
       </div>
 

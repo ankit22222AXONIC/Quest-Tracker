@@ -49,6 +49,7 @@
     },
     categories: ['Study', 'Work', 'Health', 'Coding', 'Creative', 'Personal'],
     quests: [],
+    futureGoals: [],
     history: [],
     achievements: [
       // --- Starter ---
@@ -634,6 +635,9 @@
     selectedFilter: 'all',
     searchQuery: '',
     editingQuestId: null,
+    futureFilter: 'all',
+    futureSearchQuery: '',
+    editingFutureId: null,
 
     init() {
       Confetti.init();
@@ -676,6 +680,30 @@
 
           this.selectedFilter = btn.getAttribute('data-filter-category');
           this.renderActiveQuests();
+        });
+      });
+
+      // Quick Future Goal Search Input
+      const futureSearchInput = document.getElementById('futureSearchInput');
+      if (futureSearchInput) {
+        futureSearchInput.addEventListener('input', (e) => {
+          this.futureSearchQuery = e.target.value.toLowerCase().trim();
+          this.renderFutureGoals();
+        });
+      }
+
+      // Filter category pills for Future Goals
+      document.querySelectorAll('[data-future-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-future-filter]').forEach(b => {
+            b.classList.remove('bg-primary-container', 'text-on-primary-container');
+            b.classList.add('bg-surface-container', 'text-on-surface-variant');
+          });
+          btn.classList.add('bg-primary-container', 'text-on-primary-container');
+          btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+
+          this.futureFilter = btn.getAttribute('data-future-filter');
+          this.renderFutureGoals();
         });
       });
 
@@ -800,6 +828,8 @@
       // View specific refresh
       if (viewName === 'focus') {
         TimerEngine.updateUI();
+      } else if (viewName === 'future') {
+        this.renderFutureGoals();
       } else if (viewName === 'history') {
         this.renderHistoryView();
       } else if (viewName === 'settings') {
@@ -818,6 +848,7 @@
       this.renderUserProfile();
       this.renderActiveQuests();
       this.renderCompletedQuests();
+      this.renderFutureGoals();
       this.renderHistoryView();
       this.renderSettingsView();
     },
@@ -1219,17 +1250,18 @@
     },
 
     // ------------------------------------------
-    // Quest CRUD Operations
+    // Quest & Future Goal CRUD Operations
     // ------------------------------------------
-    openCreateModal(questId = null) {
+    openCreateModal(questId = null, isFuture = false) {
       AudioEngine.playClick();
-      this.editingQuestId = questId;
+      this.editingQuestId = null;
+      this.editingFutureId = null;
 
       const modal = document.getElementById('createModal');
       const modalTitle = document.getElementById('modalTitle');
       const titleInput = document.getElementById('questTitleInput');
       const categorySelect = document.getElementById('questCategorySelect');
-      const subtasksList = document.getElementById('modalSubtasksList');
+      const isFutureCheckbox = document.getElementById('questIsFutureCheckbox');
       const submitBtn = document.getElementById('modalSubmitBtn');
 
       if (!modal) return;
@@ -1240,26 +1272,43 @@
       }
 
       if (questId) {
-        const quest = state.quests.find(q => q.id === questId);
-        if (quest) {
-          if (modalTitle) modalTitle.textContent = 'Edit Quest';
-          if (submitBtn) submitBtn.textContent = 'Save Changes';
-          if (titleInput) titleInput.value = quest.title;
-          if (categorySelect) categorySelect.value = quest.category;
+        if (isFuture) {
+          // Editing a Future Goal
+          this.editingFutureId = questId;
+          const goal = (state.futureGoals || []).find(g => g.id === questId);
+          if (goal) {
+            if (modalTitle) modalTitle.textContent = 'Edit Future Goal';
+            if (submitBtn) submitBtn.textContent = 'Save Goal';
+            if (titleInput) titleInput.value = goal.title;
+            if (categorySelect) categorySelect.value = goal.category;
+            if (isFutureCheckbox) isFutureCheckbox.checked = true;
 
-          // Select duration
-          this.setModalDuration(quest.duration);
+            this.setModalDuration(goal.duration || 30);
+            this.setModalPriority(goal.priority || 'Medium');
+            this.renderModalSubtasks(goal.subtasks || []);
+          }
+        } else {
+          // Editing an Active Quest
+          this.editingQuestId = questId;
+          const quest = state.quests.find(q => q.id === questId);
+          if (quest) {
+            if (modalTitle) modalTitle.textContent = 'Edit Quest';
+            if (submitBtn) submitBtn.textContent = 'Save Changes';
+            if (titleInput) titleInput.value = quest.title;
+            if (categorySelect) categorySelect.value = quest.category;
+            if (isFutureCheckbox) isFutureCheckbox.checked = false;
 
-          // Select priority
-          this.setModalPriority(quest.priority || 'Medium');
-
-          // Subtasks
-          this.renderModalSubtasks(quest.subtasks || []);
+            this.setModalDuration(quest.duration);
+            this.setModalPriority(quest.priority || 'Medium');
+            this.renderModalSubtasks(quest.subtasks || []);
+          }
         }
       } else {
-        if (modalTitle) modalTitle.textContent = 'Create a Quest';
-        if (submitBtn) submitBtn.textContent = 'Create Quest';
+        if (modalTitle) modalTitle.textContent = isFuture ? 'Set a Future Goal' : 'Create a Quest';
+        if (submitBtn) submitBtn.textContent = isFuture ? 'Add to Future Goals' : 'Create Quest';
         if (titleInput) titleInput.value = '';
+        if (isFutureCheckbox) isFutureCheckbox.checked = isFuture;
+
         this.setModalDuration(30);
         this.setModalPriority('Medium');
         this.renderModalSubtasks([]);
@@ -1368,10 +1417,11 @@
     saveQuestFromModal() {
       const titleInput = document.getElementById('questTitleInput');
       const categorySelect = document.getElementById('questCategorySelect');
+      const isFutureCheckbox = document.getElementById('questIsFutureCheckbox');
 
       const title = titleInput ? titleInput.value.trim() : '';
       if (!title) {
-        this.showToast('Please enter a quest title!', 'error');
+        this.showToast('Please enter a title!', 'error');
         if (titleInput) titleInput.focus();
         return;
       }
@@ -1379,6 +1429,7 @@
       const category = categorySelect ? categorySelect.value : 'Study';
       const duration = this.getSelectedDuration();
       const priority = this.getSelectedPriority();
+      const isFuture = isFutureCheckbox ? isFutureCheckbox.checked : false;
 
       // Collect Subtasks
       const subtasks = [];
@@ -1393,37 +1444,229 @@
         }
       });
 
-      if (this.editingQuestId) {
+      if (!state.futureGoals) state.futureGoals = [];
+
+      if (this.editingFutureId) {
+        const gIndex = state.futureGoals.findIndex(g => g.id === this.editingFutureId);
+        if (gIndex !== -1) {
+          state.futureGoals[gIndex].title = title;
+          state.futureGoals[gIndex].category = category;
+          state.futureGoals[gIndex].duration = duration;
+          state.futureGoals[gIndex].priority = priority;
+          state.futureGoals[gIndex].subtasks = subtasks;
+          this.showToast('Future Goal updated successfully!', 'success');
+        }
+      } else if (this.editingQuestId) {
         const qIndex = state.quests.findIndex(q => q.id === this.editingQuestId);
         if (qIndex !== -1) {
           state.quests[qIndex].title = title;
           state.quests[qIndex].category = category;
           state.quests[qIndex].duration = duration;
           state.quests[qIndex].priority = priority;
-          if (subtasks.length > 0) {
-            state.quests[qIndex].subtasks = subtasks;
-          }
+          state.quests[qIndex].subtasks = subtasks;
           this.showToast('Quest updated successfully!', 'success');
         }
       } else {
-        const newQuest = {
-          id: 'q-' + Date.now(),
-          title,
-          category,
-          priority,
-          duration,
-          completed: false,
-          createdAt: Date.now(),
-          subtasks
-        };
-        state.quests.unshift(newQuest);
-        this.showToast(`✨ Quest "${title}" embarked!`, 'success');
+        if (isFuture) {
+          const newGoal = {
+            id: 'fg-' + Date.now(),
+            title,
+            category,
+            priority,
+            duration,
+            createdAt: Date.now(),
+            subtasks
+          };
+          state.futureGoals.unshift(newGoal);
+          this.showToast(`🚀 Future Goal "${title}" saved to Vault!`, 'success');
+        } else {
+          const newQuest = {
+            id: 'q-' + Date.now(),
+            title,
+            category,
+            priority,
+            duration,
+            completed: false,
+            createdAt: Date.now(),
+            subtasks
+          };
+          state.quests.unshift(newQuest);
+          this.showToast(`✨ Quest "${title}" embarked for Today!`, 'success');
+        }
       }
 
       saveState();
       AudioEngine.playClick();
       this.closeModals();
       this.renderActiveQuests();
+      this.renderFutureGoals();
+    },
+
+    // Move a Future Goal from Vault to Today's Active Quests
+    moveToToday(goalId) {
+      if (!state.futureGoals) state.futureGoals = [];
+      const goalIndex = state.futureGoals.findIndex(g => g.id === goalId);
+      if (goalIndex === -1) return;
+
+      const goal = state.futureGoals[goalIndex];
+
+      // Create active quest for Today
+      const newQuest = {
+        id: 'q-' + Date.now(),
+        title: goal.title,
+        category: goal.category,
+        priority: goal.priority || 'Medium',
+        duration: goal.duration || 25,
+        completed: false,
+        createdAt: Date.now(),
+        subtasks: (goal.subtasks || []).map(st => ({ ...st, done: false }))
+      };
+
+      // Remove from futureGoals
+      state.futureGoals.splice(goalIndex, 1);
+
+      // Add to active quests
+      state.quests.unshift(newQuest);
+
+      saveState();
+      AudioEngine.playStartQuest();
+      Confetti.burst(60);
+
+      this.showToast(`⚡ Goal "${goal.title}" moved to Today!`, 'success');
+
+      // Switch view to Today & re-render
+      this.switchView('today');
+      this.renderAll();
+    },
+
+    deleteFutureGoal(goalId) {
+      if (!state.futureGoals) return;
+      state.futureGoals = state.futureGoals.filter(g => g.id !== goalId);
+      saveState();
+      AudioEngine.playClick();
+      this.showToast('Future Goal removed from Vault.', 'info');
+      this.renderFutureGoals();
+    },
+
+    // ------------------------------------------
+    // Future Goals View Renderer
+    // ------------------------------------------
+    renderFutureGoals() {
+      const container = document.getElementById('futureGoalsContainer');
+      const emptyState = document.getElementById('futureGoalsEmpty');
+      const vaultCountElem = document.getElementById('todayVaultCount');
+      const vaultBanner = document.getElementById('todayGoalVaultBanner');
+
+      if (!state.futureGoals) state.futureGoals = [];
+
+      // Update Goal Vault banner on Today page
+      if (vaultCountElem) vaultCountElem.textContent = state.futureGoals.length;
+      if (vaultBanner) {
+        if (state.futureGoals.length > 0) {
+          vaultBanner.classList.remove('hidden');
+        } else {
+          vaultBanner.classList.add('hidden');
+        }
+      }
+
+      if (!container) return;
+
+      let list = state.futureGoals;
+
+      // Category filter
+      if (this.futureFilter && this.futureFilter !== 'all') {
+        list = list.filter(g => g.category.toLowerCase() === this.futureFilter.toLowerCase());
+      }
+
+      // Search filter
+      if (this.futureSearchQuery) {
+        list = list.filter(g =>
+          g.title.toLowerCase().includes(this.futureSearchQuery) ||
+          g.category.toLowerCase().includes(this.futureSearchQuery)
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const priorityColors = {
+        'Low': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+        'Medium': 'text-sky-400 bg-sky-500/10 border-sky-500/20',
+        'High': 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+        'Legendary': 'text-purple-400 bg-purple-500/10 border-purple-500/20 font-semibold'
+      };
+
+      container.innerHTML = list.map(goal => {
+        const subtaskCount = (goal.subtasks || []).length;
+        const pColor = priorityColors[goal.priority] || priorityColors['Medium'];
+        const xpAmount = (goal.duration || 25) * 2;
+
+        return `
+          <div class="bg-surface-container border border-surface-variant hover:border-primary/50 rounded-xl p-lg flex flex-col gap-md relative group transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 ai-card">
+            <!-- Card Header -->
+            <div class="flex justify-between items-start gap-sm">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">Future Goal</span>
+                  <span class="text-xs px-2 py-0.5 rounded-md border ${pColor}">${goal.priority || 'Normal'}</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold line-clamp-2">${escapeHtml(goal.title)}</h3>
+                <div class="flex flex-wrap items-center gap-2 text-on-surface-variant font-label-md text-label-md mt-2">
+                  <span class="flex items-center gap-0.5 text-xs bg-surface-container-high px-2 py-0.5 rounded-md border border-surface-variant/50">
+                    <span class="material-symbols-outlined text-[14px]">schedule</span>
+                    Target: ${goal.duration || 25} min
+                  </span>
+                  <span class="text-xs px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface-variant border border-surface-variant/50">
+                    ${goal.category}
+                  </span>
+                  <span class="text-xs px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">
+                    +${xpAmount} XP
+                  </span>
+                </div>
+              </div>
+
+              <!-- Menu Actions -->
+              <div class="relative">
+                <button onclick="App.toggleQuestMenu('fg-${goal.id}')" class="p-1 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors">
+                  <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                </button>
+                <div id="questMenu-fg-${goal.id}" class="hidden absolute right-0 top-8 z-30 w-36 bg-[#252525] border border-[#383939] rounded-lg shadow-xl py-1 text-sm">
+                  <button onclick="App.openCreateModal('${goal.id}', true)" class="w-full text-left px-3 py-1.5 hover:bg-surface-container-high text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]">edit</span> Edit Goal
+                  </button>
+                  <button onclick="App.deleteFutureGoal('${goal.id}')" class="w-full text-left px-3 py-1.5 hover:bg-error/20 text-error flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]">delete</span> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subtasks Preview if any -->
+            ${subtaskCount > 0 ? `
+              <div class="bg-surface-container-lowest/60 rounded-lg p-2 border border-surface-variant/40 text-xs text-on-surface-variant flex items-center justify-between">
+                <span>📋 ${subtaskCount} Subtasks planned</span>
+                <span class="text-primary font-medium">Ready</span>
+              </div>
+            ` : ''}
+
+            <!-- Card Footer CTA -->
+            <div class="mt-auto pt-md flex justify-between items-center border-t border-surface-variant/40">
+              <span class="text-xs text-on-surface-variant/70">
+                Added ${formatTimeAgo(goal.createdAt)}
+              </span>
+              <button onclick="App.moveToToday('${goal.id}')" class="bg-gradient-to-r from-primary-container to-indigo-600 hover:from-primary-fixed hover:to-indigo-500 text-white px-md py-sm rounded-lg font-label-md text-label-md transition-all flex items-center gap-xs shadow-md hover:scale-105 font-semibold">
+                <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                Move to Today
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     },
 
     closeModals() {

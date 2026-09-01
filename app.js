@@ -94,7 +94,13 @@
       { id: 'quest_250', title: 'Quest Legend', desc: 'Complete 250 total quests', icon: 'grade', unlocked: false, claimed: false, progress: 0, maxProgress: 250, xp: 4000 },
       { id: 'level_50', title: 'Titan of Discipline', desc: 'Reach Level 50', icon: 'local_fire_department', unlocked: false, claimed: false, progress: 1, maxProgress: 50, xp: 6000 },
       { id: 'streak_100', title: '100-Day Titan', desc: 'Maintain a 100-day streak — you are a machine', icon: 'whatshot', unlocked: false, claimed: false, progress: 0, maxProgress: 100, xp: 8000 },
-      { id: 'level_100', title: 'Quest God', desc: 'Reach the maximum Level 100', icon: 'whatshot', unlocked: false, claimed: false, progress: 1, maxProgress: 100, xp: 15000 }
+      { id: 'level_100', title: 'Quest God', desc: 'Reach the maximum Level 100', icon: 'whatshot', unlocked: false, claimed: false, progress: 1, maxProgress: 100, xp: 15000 },
+      // ─── 🔥 5 NEW LEGENDARY (3000+ XP) ──────────────────────────────────
+      { id: 'hermit_mode', title: 'Hermit Mode', desc: 'Complete 8 or more quests in a single day — total obsession', icon: 'psychology_alt', unlocked: false, claimed: false, xp: 3000 },
+      { id: 'focus_deity', title: 'Focus Deity', desc: 'Accumulate 2000+ minutes of total focus time — a true monk', icon: 'self_improvement', unlocked: false, claimed: false, progress: 0, maxProgress: 2000, xp: 4500 },
+      { id: 'absolute_grinder', title: 'Absolute Grinder', desc: 'Complete a 90-minute continuous focus session without stopping', icon: 'timer', unlocked: false, claimed: false, xp: 3000 },
+      { id: 'quest_obsessed', title: 'Quest Obsessed', desc: 'Complete 500 total quests — this is your entire personality now', icon: 'done_all', unlocked: false, claimed: false, progress: 0, maxProgress: 500, xp: 5500 },
+      { id: 'the_unbreakable', title: 'The Unbreakable', desc: 'Maintain a 200-day streak — you are built different', icon: 'diamond', unlocked: false, claimed: false, progress: 0, maxProgress: 200, xp: 12000 }
     ]
   };
 
@@ -2375,6 +2381,25 @@
           case 'focus_500':
             ach.progress = Math.min(focusMins, ach.maxProgress || 500);
             if (focusMins >= 500) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          // ─── 🔥 5 LEGENDARY checks ───────────────────────────────────────
+          case 'hermit_mode':
+            if (this.getTodayQuestCount() >= 8) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'focus_deity':
+            ach.progress = Math.min(focusMins, ach.maxProgress || 2000);
+            if (focusMins >= 2000) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'absolute_grinder':
+            if (history.some(h => (h.duration || 0) >= 90)) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'quest_obsessed':
+            ach.progress = Math.min(totalQuests, ach.maxProgress || 500);
+            if (totalQuests >= 500) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'the_unbreakable':
+            ach.progress = Math.min(streak, ach.maxProgress || 200);
+            if (streak >= 200) { ach.unlocked = true; newlyUnlocked = true; }
             break;
         }
       });

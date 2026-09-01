@@ -80,6 +80,10 @@
       { id: 'level_3', title: 'Rising Star', desc: 'Reach Level 3', icon: 'star', unlocked: false, progress: 1, maxProgress: 3, xp: 200 },
       { id: 'level_5', title: 'Grandmaster Quest', desc: 'Reach Level 5', icon: 'workspace_premium', unlocked: false, progress: 1, maxProgress: 5, xp: 500 },
       { id: 'level_10', title: 'Legendary Hero', desc: 'Reach Level 10', icon: 'auto_awesome', unlocked: false, progress: 1, maxProgress: 10, xp: 1000 },
+      { id: 'level_20', title: 'Elite Warrior', desc: 'Reach Level 20', icon: 'shield', unlocked: false, progress: 1, maxProgress: 20, xp: 2000 },
+      { id: 'level_30', title: 'Champion of Focus', desc: 'Reach Level 30', icon: 'emoji_events', unlocked: false, progress: 1, maxProgress: 30, xp: 3500 },
+      { id: 'level_50', title: 'Titan of Discipline', desc: 'Reach Level 50', icon: 'local_fire_department', unlocked: false, progress: 1, maxProgress: 50, xp: 6000 },
+      { id: 'level_100', title: 'Quest God', desc: 'Reach the maximum Level 100', icon: 'whatshot', unlocked: false, progress: 1, maxProgress: 100, xp: 15000 },
       // --- Special ---
       { id: 'night_owl', title: 'Night Owl', desc: 'Complete a quest between midnight and 5 AM IST', icon: 'dark_mode', unlocked: false, xp: 100 },
       { id: 'early_bird', title: 'Early Bird', desc: 'Complete a quest between 5 AM and 7 AM IST', icon: 'wb_twilight', unlocked: false, xp: 100 },
@@ -995,23 +999,48 @@
     },
 
     renderUserProfile() {
-      // Calculate XP for next level: 100 * level
-      const currentLevel = state.user.level || 1;
+      // XP needed per level = level x 100 (linear). Level cap = 100.
+      const MAX_LEVEL = 100;
+      const currentLevel = Math.min(state.user.level || 1, MAX_LEVEL);
+      const isMaxLevel = currentLevel >= MAX_LEVEL;
       const xpNeeded = currentLevel * 100;
-      const currentXp = state.user.xp % xpNeeded;
-      const xpPercent = Math.min(100, Math.floor((currentXp / xpNeeded) * 100));
+      // XP earned within current level = total XP minus cumulative threshold
+      const xpFloor = ((currentLevel - 1) * currentLevel / 2) * 100;
+      const currentXp = isMaxLevel ? xpNeeded : Math.max(0, state.user.xp - xpFloor);
+      const xpPercent = isMaxLevel ? 100 : Math.min(100, Math.floor((currentXp / xpNeeded) * 100));
 
       const levelElem = document.getElementById('userLevelBadge');
-      if (levelElem) levelElem.textContent = `Lvl ${currentLevel}`;
+      if (levelElem) levelElem.textContent = isMaxLevel ? 'MAX' : `Lvl ${currentLevel}`;
 
       const levelRankElem = document.getElementById('userRankTitle');
       if (levelRankElem) {
-        const ranks = ['Novice Adventurer', 'Apprentice of Focus', 'Quest Master', 'Chrono Knight', 'Grandmaster'];
+        const ranks = [
+          'Novice Adventurer', 'Apprentice of Focus', 'Quest Initiate', 'Chrono Scout', 'Focused Fighter',
+          'Discipline Seeker', 'Iron Will', 'Shadow Grinder', 'Relentless Pursuer', 'Quest Master',
+          'Storm Walker', 'Storm Walker', 'Storm Walker', 'Storm Walker', 'Storm Walker',
+          'Elite Warrior', 'Elite Warrior', 'Elite Warrior', 'Elite Warrior', 'Elite Warrior',
+          'Void Strider', 'Void Strider', 'Void Strider', 'Void Strider', 'Void Strider',
+          'Chrono Knight', 'Chrono Knight', 'Chrono Knight', 'Chrono Knight', 'Chrono Knight',
+          'Apex Hunter', 'Apex Hunter', 'Apex Hunter', 'Apex Hunter', 'Apex Hunter',
+          'Apex Hunter', 'Apex Hunter', 'Apex Hunter', 'Apex Hunter', 'Apex Hunter',
+          'Legend of the Grind', 'Legend of the Grind', 'Legend of the Grind', 'Legend of the Grind', 'Legend of the Grind',
+          'Legend of the Grind', 'Legend of the Grind', 'Legend of the Grind', 'Legend of the Grind', 'Titan of Discipline',
+          'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline',
+          'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline', 'Titan of Discipline',
+          'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord',
+          'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord', 'Phantom Overlord',
+          'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror',
+          'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror', 'Celestial Conqueror',
+          'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God',
+          'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God',
+          'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God',
+          'Ascendant God', 'Ascendant God', 'Ascendant God', 'Ascendant God', '⚡ Quest God ⚡'
+        ];
         levelRankElem.textContent = ranks[Math.min(ranks.length - 1, currentLevel - 1)];
       }
 
       const xpTextElem = document.getElementById('userXpText');
-      if (xpTextElem) xpTextElem.textContent = `${currentXp} / ${xpNeeded} XP`;
+      if (xpTextElem) xpTextElem.textContent = isMaxLevel ? 'MAX LEVEL' : `${currentXp} / ${xpNeeded} XP`;
 
       const xpBarElem = document.getElementById('userXpProgressBar');
       if (xpBarElem) xpBarElem.style.width = `${xpPercent}%`;
@@ -1938,15 +1967,23 @@
     // Gamification: XP, Levels, Badges, Streaks
     // ------------------------------------------
     awardXP(amount) {
+      const MAX_LEVEL = 100;
       state.user.xp = (state.user.xp || 0) + amount;
       const currentLevel = state.user.level || 1;
-      const xpNeeded = currentLevel * 100;
 
-      if (state.user.xp >= currentLevel * xpNeeded) {
-        state.user.level += 1;
-        AudioEngine.playLevelUp();
-        Confetti.burst(120);
-        this.showToast(`🌟 LEVEL UP! You reached Level ${state.user.level}!`, 'success');
+      if (currentLevel < MAX_LEVEL) {
+        // Cumulative XP to complete current level = sum(1..level)*100 = level*(level+1)/2*100
+        const xpToNextLevel = (currentLevel * (currentLevel + 1) / 2) * 100;
+        if (state.user.xp >= xpToNextLevel) {
+          state.user.level = Math.min(state.user.level + 1, MAX_LEVEL);
+          AudioEngine.playLevelUp();
+          Confetti.burst(120);
+          if (state.user.level >= MAX_LEVEL) {
+            this.showToast('⚡ QUEST GOD! You reached the maximum Level 100!', 'success');
+          } else {
+            this.showToast(`🌟 LEVEL UP! You reached Level ${state.user.level}!`, 'success');
+          }
+        }
       }
 
       this.renderUserProfile();
@@ -2168,6 +2205,22 @@
           case 'level_10':
             ach.progress = Math.min(level, ach.maxProgress || 10);
             if (level >= 10) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'level_20':
+            ach.progress = Math.min(level, ach.maxProgress || 20);
+            if (level >= 20) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'level_30':
+            ach.progress = Math.min(level, ach.maxProgress || 30);
+            if (level >= 30) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'level_50':
+            ach.progress = Math.min(level, ach.maxProgress || 50);
+            if (level >= 50) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'level_100':
+            ach.progress = Math.min(level, ach.maxProgress || 100);
+            if (level >= 100) { ach.unlocked = true; newlyUnlocked = true; }
             break;
 
           // --- Special / Time-based ---

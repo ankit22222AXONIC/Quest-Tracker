@@ -1344,44 +1344,63 @@
       const container = document.getElementById('achievementsList');
       if (!container) return;
 
-      const claimable = state.achievements.filter(a => a.unlocked && !a.claimed).length;
-      const unlocked = state.achievements.filter(a => a.unlocked).length;
+      // --- Tier system based on XP ---
+      function getTier(xp) {
+        if (xp >= 3000)  return { label: 'LEGENDARY', color: 'text-orange-400', bg: 'bg-orange-400/15 border-orange-400/40', dot: 'bg-orange-400', rank: 4 };
+        if (xp >= 700)   return { label: 'EPIC',      color: 'text-purple-400', bg: 'bg-purple-400/15 border-purple-400/40', dot: 'bg-purple-400', rank: 3 };
+        if (xp >= 200)   return { label: 'RARE',      color: 'text-sky-400',    bg: 'bg-sky-400/15 border-sky-400/40',       dot: 'bg-sky-400',    rank: 2 };
+        return              { label: 'COMMON',    color: 'text-emerald-400', bg: 'bg-emerald-400/15 border-emerald-400/40', dot: 'bg-emerald-400', rank: 1 };
+      }
 
-      // Update header count to reflect claimable rewards
+      const claimable = state.achievements.filter(a => a.unlocked && !a.claimed).length;
+      const unlocked  = state.achievements.filter(a => a.unlocked).length;
+
       const countEl = document.getElementById('achievementsUnlockedCount');
       if (countEl) countEl.textContent = `${unlocked} Unlocked${claimable > 0 ? ` · ${claimable} to Claim!` : ''}`;
 
-      // Sort: claimable first, then locked, then claimed
+      // Sort: claimable first → locked → claimed; within each group sort by XP descending (hardest on top)
       const sorted = [...state.achievements].sort((a, b) => {
-        const scoreA = (a.unlocked && !a.claimed) ? 0 : (!a.unlocked ? 1 : 2);
-        const scoreB = (b.unlocked && !b.claimed) ? 0 : (!b.unlocked ? 1 : 2);
-        return scoreA - scoreB;
+        const groupA = (a.unlocked && !a.claimed) ? 0 : (!a.unlocked ? 1 : 2);
+        const groupB = (b.unlocked && !b.claimed) ? 0 : (!b.unlocked ? 1 : 2);
+        if (groupA !== groupB) return groupA - groupB;
+        return b.xp - a.xp; // within same group: hardest (highest XP) first
       });
 
       container.innerHTML = sorted.map(ach => {
         const isClaimable = ach.unlocked && !ach.claimed;
-        const isClaimed = ach.unlocked && ach.claimed;
+        const isClaimed   = ach.unlocked && ach.claimed;
+        const tier = getTier(ach.xp);
+
         const cardClass = isClaimable
           ? 'bg-gradient-to-r from-primary/10 to-amber-400/10 border-amber-400/50 shadow-lg shadow-amber-400/10'
           : isClaimed
-          ? 'bg-surface-container/50 border-surface-variant/30 opacity-60'
+          ? 'bg-surface-container/50 border-surface-variant/30 opacity-55'
           : 'bg-surface-container-low/40 border-surface-variant opacity-50';
+
         const iconClass = isClaimable
           ? 'bg-amber-400 text-black badge-shine'
           : isClaimed
           ? 'bg-primary/40 text-primary'
           : 'bg-surface-variant text-on-surface-variant';
+
         return `
           <div class="p-3 rounded-xl border transition-all ${cardClass} flex items-start gap-3">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${iconClass}">
               <span class="material-symbols-outlined text-[22px]">${ach.icon || 'star'}</span>
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <h4 class="text-sm font-semibold text-on-surface truncate">${ach.title}</h4>
-                <span class="text-xs ${isClaimable ? 'text-amber-400' : 'text-amber-400/60'} font-bold shrink-0">+${ach.xp} XP</span>
+              <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0">
+                  <h4 class="text-sm font-semibold text-on-surface truncate">${ach.title}</h4>
+                  <!-- Difficulty Tier Badge -->
+                  <span class="inline-flex items-center gap-1 mt-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${tier.bg} ${tier.color}">
+                    <span class="w-1.5 h-1.5 rounded-full ${tier.dot} inline-block"></span>
+                    ${tier.label}
+                  </span>
+                </div>
+                <span class="text-xs ${isClaimable ? 'text-amber-400' : 'text-amber-400/60'} font-bold shrink-0 mt-0.5">+${ach.xp} XP</span>
               </div>
-              <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-2">${ach.desc}</p>
+              <p class="text-xs text-on-surface-variant mt-1.5 line-clamp-2">${ach.desc}</p>
               ${!ach.unlocked && ach.maxProgress ? `
                 <div class="mt-2">
                   <div class="flex justify-between text-[10px] text-on-surface-variant mb-0.5">

@@ -273,6 +273,28 @@
           </div>
         </header>
 
+        <!-- Daily Motivation Banner -->
+        <div id="dailyMotivationBanner" class="mb-6 p-5 rounded-2xl relative overflow-hidden border border-primary/20 shadow-xl" style="background: linear-gradient(135deg, rgba(128,131,255,0.08) 0%, rgba(99,102,241,0.12) 50%, rgba(139,92,246,0.08) 100%); backdrop-filter: blur(12px);">
+          <!-- Decorative background glow -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style="background: radial-gradient(circle, #8083ff 0%, transparent 70%); transform: translate(30%, -30%);"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-10" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%); transform: translate(-30%, 30%);"></div>
+
+          <div class="relative flex items-start gap-4">
+            <!-- Quote Icon -->
+            <div class="w-10 h-10 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-primary text-[20px]">format_quote</span>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-primary/80">Today's Fuel</span>
+                <div class="h-px flex-1 bg-primary/20"></div>
+              </div>
+              <p id="dailyMotivationText" class="text-sm sm:text-base font-semibold text-on-surface leading-relaxed italic"></p>
+            </div>
+          </div>
+        </div>
+
         <!-- Goal Vault Notice Banner (if future goals exist) -->
         <div id="todayGoalVaultBanner" class="hidden mb-6 p-4 rounded-xl glass-panel border border-primary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
           <div class="flex items-center gap-3">

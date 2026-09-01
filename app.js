@@ -1350,12 +1350,28 @@
       const container = document.getElementById('achievementsList');
       if (!container) return;
 
-      // --- Tier system based on XP ---
+      // --- Tier system based on XP (inline styles to avoid Tailwind purging) ---
       function getTier(xp) {
-        if (xp >= 3000)  return { label: 'LEGENDARY', color: 'text-orange-400', bg: 'bg-orange-400/15 border-orange-400/40', dot: 'bg-orange-400', rank: 4 };
-        if (xp >= 700)   return { label: 'EPIC',      color: 'text-purple-400', bg: 'bg-purple-400/15 border-purple-400/40', dot: 'bg-purple-400', rank: 3 };
-        if (xp >= 200)   return { label: 'RARE',      color: 'text-sky-400',    bg: 'bg-sky-400/15 border-sky-400/40',       dot: 'bg-sky-400',    rank: 2 };
-        return              { label: 'COMMON',    color: 'text-emerald-400', bg: 'bg-emerald-400/15 border-emerald-400/40', dot: 'bg-emerald-400', rank: 1 };
+        if (xp >= 3000) return {
+          label: 'LEGENDARY',
+          badgeStyle: 'color:#fb923c; background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.45);',
+          dotStyle: 'background:#fb923c', rank: 4
+        };
+        if (xp >= 700) return {
+          label: 'EPIC',
+          badgeStyle: 'color:#c084fc; background:rgba(192,132,252,0.15); border:1px solid rgba(192,132,252,0.45);',
+          dotStyle: 'background:#c084fc', rank: 3
+        };
+        if (xp >= 200) return {
+          label: 'RARE',
+          badgeStyle: 'color:#38bdf8; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.45);',
+          dotStyle: 'background:#38bdf8', rank: 2
+        };
+        return {
+          label: 'COMMON',
+          badgeStyle: 'color:#34d399; background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.45);',
+          dotStyle: 'background:#34d399', rank: 1
+        };
       }
 
       const claimable = state.achievements.filter(a => a.unlocked && !a.claimed).length;
@@ -1399,8 +1415,8 @@
                 <div class="min-w-0">
                   <h4 class="text-sm font-semibold text-on-surface truncate">${ach.title}</h4>
                   <!-- Difficulty Tier Badge -->
-                  <span class="inline-flex items-center gap-1 mt-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${tier.bg} ${tier.color}">
-                    <span class="w-1.5 h-1.5 rounded-full ${tier.dot} inline-block"></span>
+                  <span class="inline-flex items-center gap-1 mt-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest" style="${tier.badgeStyle}">
+                    <span class="w-1.5 h-1.5 rounded-full inline-block" style="${tier.dotStyle}"></span>
                     ${tier.label}
                   </span>
                 </div>

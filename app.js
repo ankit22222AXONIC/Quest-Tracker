@@ -52,42 +52,49 @@
     futureGoals: [],
     history: [],
     achievements: [
-      // --- Starter ---
-      { id: 'first_quest', title: 'First Blood', desc: 'Complete your very first quest', icon: 'military_tech', unlocked: false, xp: 50 },
-      { id: 'triple_threat', title: 'Triple Threat', desc: 'Complete 3 quests in a single day to earn your first streak', icon: 'looks_3', unlocked: false, xp: 75 },
-      // --- Focus & Timer ---
-      { id: 'pioneer', title: 'Pomodoro Pioneer', desc: 'Complete 5 focus sessions', icon: 'timer', unlocked: false, progress: 0, maxProgress: 5, xp: 100 },
-      { id: 'deep_diver', title: 'Deep Diver', desc: 'Complete a 45+ minute continuous focus session', icon: 'surfing', unlocked: false, xp: 250 },
-      { id: 'marathon_runner', title: 'Marathon Runner', desc: 'Complete a 60+ minute continuous focus session', icon: 'directions_run', unlocked: false, xp: 400 },
-      { id: 'focus_100', title: 'Century of Focus', desc: 'Accumulate 100+ minutes of total focus time', icon: 'hourglass_top', unlocked: false, progress: 0, maxProgress: 100, xp: 120 },
-      { id: 'centurion', title: 'Master of Time', desc: 'Accumulate 300+ minutes of total focus time', icon: 'psychology', unlocked: false, progress: 0, maxProgress: 300, xp: 300 },
-      { id: 'focus_1000', title: 'Time Lord', desc: 'Accumulate 1000+ minutes of total focus time', icon: 'rocket_launch', unlocked: false, progress: 0, maxProgress: 1000, xp: 750 },
-      // --- Streaks ---
-      { id: 'streak_3', title: 'Momentum Builder', desc: 'Maintain a 3-day streak (3+ quests/day)', icon: 'local_fire_department', unlocked: false, progress: 0, maxProgress: 3, xp: 150 },
-      { id: 'streak_7', title: 'Weekly Warrior', desc: 'Maintain a 7-day streak', icon: 'whatshot', unlocked: false, progress: 0, maxProgress: 7, xp: 350 },
-      { id: 'streak_14', title: 'Fortnight Legend', desc: 'Maintain a 14-day streak', icon: 'bolt', unlocked: false, progress: 0, maxProgress: 14, xp: 600 },
-      { id: 'streak_30', title: 'Unstoppable Force', desc: 'Maintain a 30-day streak — true mastery', icon: 'diamond', unlocked: false, progress: 0, maxProgress: 30, xp: 1500 },
-      // --- Category Mastery ---
-      { id: 'scholar', title: 'Scholar of Wisdom', desc: 'Complete 5 Study quests', icon: 'menu_book', unlocked: false, progress: 0, maxProgress: 5, xp: 200 },
-      { id: 'code_ninja', title: 'Code Ninja', desc: 'Complete 5 Coding quests', icon: 'code', unlocked: false, progress: 0, maxProgress: 5, xp: 200 },
-      { id: 'fit_warrior', title: 'Fitness Warrior', desc: 'Complete 5 Health quests', icon: 'fitness_center', unlocked: false, progress: 0, maxProgress: 5, xp: 200 },
-      { id: 'creative_spark', title: 'Creative Spark', desc: 'Complete 5 Creative quests', icon: 'brush', unlocked: false, progress: 0, maxProgress: 5, xp: 200 },
-      // --- Milestones ---
-      { id: 'quest_10', title: 'Adventurer Rising', desc: 'Complete 10 total quests', icon: 'trending_up', unlocked: false, progress: 0, maxProgress: 10, xp: 150 },
-      { id: 'quest_25', title: 'Quest Conqueror', desc: 'Complete 25 total quests', icon: 'emoji_events', unlocked: false, progress: 0, maxProgress: 25, xp: 400 },
-      { id: 'quest_50', title: 'Half-Centurion', desc: 'Complete 50 total quests', icon: 'military_tech', unlocked: false, progress: 0, maxProgress: 50, xp: 800 },
-      // --- Levels ---
-      { id: 'level_3', title: 'Rising Star', desc: 'Reach Level 3', icon: 'star', unlocked: false, progress: 1, maxProgress: 3, xp: 200 },
-      { id: 'level_5', title: 'Grandmaster Quest', desc: 'Reach Level 5', icon: 'workspace_premium', unlocked: false, progress: 1, maxProgress: 5, xp: 500 },
-      { id: 'level_10', title: 'Legendary Hero', desc: 'Reach Level 10', icon: 'auto_awesome', unlocked: false, progress: 1, maxProgress: 10, xp: 1000 },
-      { id: 'level_20', title: 'Elite Warrior', desc: 'Reach Level 20', icon: 'shield', unlocked: false, progress: 1, maxProgress: 20, xp: 2000 },
-      { id: 'level_30', title: 'Champion of Focus', desc: 'Reach Level 30', icon: 'emoji_events', unlocked: false, progress: 1, maxProgress: 30, xp: 3500 },
-      { id: 'level_50', title: 'Titan of Discipline', desc: 'Reach Level 50', icon: 'local_fire_department', unlocked: false, progress: 1, maxProgress: 50, xp: 6000 },
-      { id: 'level_100', title: 'Quest God', desc: 'Reach the maximum Level 100', icon: 'whatshot', unlocked: false, progress: 1, maxProgress: 100, xp: 15000 },
-      // --- Special ---
-      { id: 'night_owl', title: 'Night Owl', desc: 'Complete a quest between midnight and 5 AM IST', icon: 'dark_mode', unlocked: false, xp: 100 },
-      { id: 'early_bird', title: 'Early Bird', desc: 'Complete a quest between 5 AM and 7 AM IST', icon: 'wb_twilight', unlocked: false, xp: 100 },
-      { id: 'all_rounder', title: 'All-Rounder', desc: 'Complete at least 1 quest in every category', icon: 'interests', unlocked: false, xp: 500 }
+      // ─── 🟢 LOW XP (50–150) ───────────────────────────────────────────────
+      { id: 'first_quest', title: 'First Blood', desc: 'Complete your very first quest', icon: 'military_tech', unlocked: false, claimed: false, xp: 50 },
+      { id: 'triple_threat', title: 'Triple Threat', desc: 'Complete 3 quests in a single day', icon: 'looks_3', unlocked: false, claimed: false, xp: 75 },
+      { id: 'night_owl', title: 'Night Owl', desc: 'Complete a quest between midnight and 5 AM IST', icon: 'dark_mode', unlocked: false, claimed: false, xp: 100 },
+      { id: 'early_bird', title: 'Early Bird', desc: 'Complete a quest between 5 AM and 7 AM IST', icon: 'wb_twilight', unlocked: false, claimed: false, xp: 100 },
+      { id: 'pioneer', title: 'Pomodoro Pioneer', desc: 'Complete 5 focus sessions', icon: 'timer', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 100 },
+      { id: 'focus_100', title: 'Century of Focus', desc: 'Accumulate 100+ minutes of total focus time', icon: 'hourglass_top', unlocked: false, claimed: false, progress: 0, maxProgress: 100, xp: 120 },
+      { id: 'streak_3', title: 'Momentum Builder', desc: 'Maintain a 3-day streak (3+ quests/day)', icon: 'local_fire_department', unlocked: false, claimed: false, progress: 0, maxProgress: 3, xp: 150 },
+      { id: 'quest_10', title: 'Adventurer Rising', desc: 'Complete 10 total quests', icon: 'trending_up', unlocked: false, claimed: false, progress: 0, maxProgress: 10, xp: 150 },
+      { id: 'sunday_grind', title: 'Sunday Grinder', desc: 'Complete a quest on a Sunday (IST)', icon: 'weekend', unlocked: false, claimed: false, xp: 60 },
+      { id: 'comeback', title: 'Comeback Kid', desc: 'Complete a quest after being inactive for 2+ days', icon: 'replay', unlocked: false, claimed: false, xp: 80 },
+      { id: 'speed_run', title: 'Speed Runner', desc: 'Complete a quest with a 5-minute focus session', icon: 'speed', unlocked: false, claimed: false, xp: 75 },
+      // ─── 🟡 MEDIUM XP (200–800) ──────────────────────────────────────────
+      { id: 'scholar', title: 'Scholar of Wisdom', desc: 'Complete 5 Study quests', icon: 'menu_book', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'code_ninja', title: 'Code Ninja', desc: 'Complete 5 Coding quests', icon: 'code', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'fit_warrior', title: 'Fitness Warrior', desc: 'Complete 5 Health quests', icon: 'fitness_center', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'creative_spark', title: 'Creative Spark', desc: 'Complete 5 Creative quests', icon: 'brush', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'level_3', title: 'Rising Star', desc: 'Reach Level 3', icon: 'star', unlocked: false, claimed: false, progress: 1, maxProgress: 3, xp: 200 },
+      { id: 'deep_diver', title: 'Deep Diver', desc: 'Complete a 45+ minute continuous focus session', icon: 'surfing', unlocked: false, claimed: false, xp: 250 },
+      { id: 'centurion', title: 'Master of Time', desc: 'Accumulate 300+ minutes of total focus time', icon: 'psychology', unlocked: false, claimed: false, progress: 0, maxProgress: 300, xp: 300 },
+      { id: 'streak_7', title: 'Weekly Warrior', desc: 'Maintain a 7-day streak', icon: 'whatshot', unlocked: false, claimed: false, progress: 0, maxProgress: 7, xp: 350 },
+      { id: 'marathon_runner', title: 'Marathon Runner', desc: 'Complete a 60+ minute continuous focus session', icon: 'directions_run', unlocked: false, claimed: false, xp: 400 },
+      { id: 'quest_25', title: 'Quest Conqueror', desc: 'Complete 25 total quests', icon: 'emoji_events', unlocked: false, claimed: false, progress: 0, maxProgress: 25, xp: 400 },
+      { id: 'all_rounder', title: 'All-Rounder', desc: 'Complete at least 1 quest in every category', icon: 'interests', unlocked: false, claimed: false, xp: 500 },
+      { id: 'level_5', title: 'Grandmaster Quest', desc: 'Reach Level 5', icon: 'workspace_premium', unlocked: false, claimed: false, progress: 1, maxProgress: 5, xp: 500 },
+      { id: 'streak_14', title: 'Fortnight Legend', desc: 'Maintain a 14-day streak', icon: 'bolt', unlocked: false, claimed: false, progress: 0, maxProgress: 14, xp: 600 },
+      { id: 'quest_50', title: 'Half-Centurion', desc: 'Complete 50 total quests', icon: 'military_tech', unlocked: false, claimed: false, progress: 0, maxProgress: 50, xp: 800 },
+      { id: 'focus_500', title: 'Focus Fanatic', desc: 'Accumulate 500+ minutes of total focus time', icon: 'av_timer', unlocked: false, claimed: false, progress: 0, maxProgress: 500, xp: 500 },
+      { id: 'work_horse', title: 'Work Horse', desc: 'Complete 5 Work quests', icon: 'work', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'personal_dev', title: 'Self-Made', desc: 'Complete 5 Personal quests', icon: 'self_improvement', unlocked: false, claimed: false, progress: 0, maxProgress: 5, xp: 200 },
+      { id: 'perfect_week', title: 'Perfect Week', desc: 'Complete 3+ quests every day for 7 days straight', icon: 'calendar_month', unlocked: false, claimed: false, progress: 0, maxProgress: 7, xp: 700 },
+      { id: 'quest_100', title: 'Centurion', desc: 'Complete 100 total quests', icon: 'done_all', unlocked: false, claimed: false, progress: 0, maxProgress: 100, xp: 1500 },
+      // ─── 🔴 HIGH XP (1000+) ──────────────────────────────────────────────
+      { id: 'level_10', title: 'Legendary Hero', desc: 'Reach Level 10', icon: 'auto_awesome', unlocked: false, claimed: false, progress: 1, maxProgress: 10, xp: 1000 },
+      { id: 'streak_30', title: 'Unstoppable Force', desc: 'Maintain a 30-day streak — true mastery', icon: 'diamond', unlocked: false, claimed: false, progress: 0, maxProgress: 30, xp: 1500 },
+      { id: 'focus_1000', title: 'Time Lord', desc: 'Accumulate 1000+ minutes of total focus time', icon: 'rocket_launch', unlocked: false, claimed: false, progress: 0, maxProgress: 1000, xp: 750 },
+      { id: 'level_20', title: 'Elite Warrior', desc: 'Reach Level 20', icon: 'shield', unlocked: false, claimed: false, progress: 1, maxProgress: 20, xp: 2000 },
+      { id: 'streak_60', title: 'Diamond Grinder', desc: 'Maintain a 60-day streak — elite of the elite', icon: 'workspace_premium', unlocked: false, claimed: false, progress: 0, maxProgress: 60, xp: 3000 },
+      { id: 'level_30', title: 'Champion of Focus', desc: 'Reach Level 30', icon: 'emoji_events', unlocked: false, claimed: false, progress: 1, maxProgress: 30, xp: 3500 },
+      { id: 'quest_250', title: 'Quest Legend', desc: 'Complete 250 total quests', icon: 'grade', unlocked: false, claimed: false, progress: 0, maxProgress: 250, xp: 4000 },
+      { id: 'level_50', title: 'Titan of Discipline', desc: 'Reach Level 50', icon: 'local_fire_department', unlocked: false, claimed: false, progress: 1, maxProgress: 50, xp: 6000 },
+      { id: 'streak_100', title: '100-Day Titan', desc: 'Maintain a 100-day streak — you are a machine', icon: 'whatshot', unlocked: false, claimed: false, progress: 0, maxProgress: 100, xp: 8000 },
+      { id: 'level_100', title: 'Quest God', desc: 'Reach the maximum Level 100', icon: 'whatshot', unlocked: false, claimed: false, progress: 1, maxProgress: 100, xp: 15000 }
     ]
   };
 
@@ -1337,31 +1344,80 @@
       const container = document.getElementById('achievementsList');
       if (!container) return;
 
-      container.innerHTML = state.achievements.map(ach => `
-        <div class="p-3 rounded-xl border transition-all ${ach.unlocked ? 'bg-surface-container-high/80 border-primary/40 glow-primary' : 'bg-surface-container-low/40 border-surface-variant opacity-60'} flex items-start gap-3">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${ach.unlocked ? 'bg-primary text-on-primary badge-shine' : 'bg-surface-variant text-on-surface-variant'}">
-            <span class="material-symbols-outlined text-[22px]">${ach.icon || 'star'}</span>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between">
-              <h4 class="text-sm font-semibold text-on-surface truncate">${ach.title}</h4>
-              <span class="text-xs text-amber-400 font-bold">+${ach.xp} XP</span>
+      const claimable = state.achievements.filter(a => a.unlocked && !a.claimed).length;
+      const unlocked = state.achievements.filter(a => a.unlocked).length;
+
+      // Update header count to reflect claimable rewards
+      const countEl = document.getElementById('achievementsUnlockedCount');
+      if (countEl) countEl.textContent = `${unlocked} Unlocked${claimable > 0 ? ` · ${claimable} to Claim!` : ''}`;
+
+      // Sort: claimable first, then locked, then claimed
+      const sorted = [...state.achievements].sort((a, b) => {
+        const scoreA = (a.unlocked && !a.claimed) ? 0 : (!a.unlocked ? 1 : 2);
+        const scoreB = (b.unlocked && !b.claimed) ? 0 : (!b.unlocked ? 1 : 2);
+        return scoreA - scoreB;
+      });
+
+      container.innerHTML = sorted.map(ach => {
+        const isClaimable = ach.unlocked && !ach.claimed;
+        const isClaimed = ach.unlocked && ach.claimed;
+        const cardClass = isClaimable
+          ? 'bg-gradient-to-r from-primary/10 to-amber-400/10 border-amber-400/50 shadow-lg shadow-amber-400/10'
+          : isClaimed
+          ? 'bg-surface-container/50 border-surface-variant/30 opacity-60'
+          : 'bg-surface-container-low/40 border-surface-variant opacity-50';
+        const iconClass = isClaimable
+          ? 'bg-amber-400 text-black badge-shine'
+          : isClaimed
+          ? 'bg-primary/40 text-primary'
+          : 'bg-surface-variant text-on-surface-variant';
+        return `
+          <div class="p-3 rounded-xl border transition-all ${cardClass} flex items-start gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${iconClass}">
+              <span class="material-symbols-outlined text-[22px]">${ach.icon || 'star'}</span>
             </div>
-            <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-2">${ach.desc}</p>
-            ${!ach.unlocked && ach.maxProgress ? `
-              <div class="mt-2">
-                <div class="flex justify-between text-[10px] text-on-surface-variant mb-0.5">
-                  <span>Progress</span>
-                  <span>${ach.progress}/${ach.maxProgress}</span>
-                </div>
-                <div class="w-full h-1 bg-surface-variant rounded-full overflow-hidden">
-                  <div class="h-full bg-primary" style="width: ${(ach.progress/ach.maxProgress)*100}%"></div>
-                </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-sm font-semibold text-on-surface truncate">${ach.title}</h4>
+                <span class="text-xs ${isClaimable ? 'text-amber-400' : 'text-amber-400/60'} font-bold shrink-0">+${ach.xp} XP</span>
               </div>
-            ` : ''}
+              <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-2">${ach.desc}</p>
+              ${!ach.unlocked && ach.maxProgress ? `
+                <div class="mt-2">
+                  <div class="flex justify-between text-[10px] text-on-surface-variant mb-0.5">
+                    <span>Progress</span><span>${ach.progress || 0}/${ach.maxProgress}</span>
+                  </div>
+                  <div class="w-full h-1 bg-surface-variant rounded-full overflow-hidden">
+                    <div class="h-full bg-primary transition-all" style="width: ${((ach.progress||0)/ach.maxProgress)*100}%"></div>
+                  </div>
+                </div>
+              ` : ''}
+              ${isClaimable ? `
+                <button onclick="App.claimAchievement('${ach.id}')"
+                  class="mt-2.5 w-full py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-black hover:bg-amber-300 active:scale-95 transition-all flex items-center justify-center gap-1 animate-pulse">
+                  <span class="material-symbols-outlined text-[14px]">redeem</span>
+                  CLAIM +${ach.xp} XP
+                </button>
+              ` : isClaimed ? `
+                <div class="mt-2 flex items-center gap-1 text-[10px] text-primary/70 font-semibold">
+                  <span class="material-symbols-outlined text-[12px]">check_circle</span> Claimed
+                </div>
+              ` : ''}
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+    },
+
+    claimAchievement(id) {
+      const ach = state.achievements.find(a => a.id === id);
+      if (!ach || !ach.unlocked || ach.claimed) return;
+      ach.claimed = true;
+      this.awardXP(ach.xp);
+      Confetti.burst(80);
+      this.showToast(`🏆 Claimed! +${ach.xp} XP — ${ach.title}`, 'success');
+      saveState();
+      this.renderAchievements();
     },
 
     // ------------------------------------------
@@ -2240,12 +2296,72 @@
             if (allCats.every(c => cats.has(c))) { ach.unlocked = true; newlyUnlocked = true; }
             break;
           }
+          // --- Special / New Checks ---
+          case 'sunday_grind': {
+            const lastCompleted = history.length > 0 ? new Date(history[0].completedAt) : null;
+            if (lastCompleted) {
+              const dayName = lastCompleted.toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', weekday: 'long' });
+              if (dayName === 'Sunday') { ach.unlocked = true; newlyUnlocked = true; }
+            }
+            break;
+          }
+          case 'comeback': {
+            // Check if there was a 2+ day gap between any two history entries
+            if (history.length >= 2) {
+              for (let i = 0; i < history.length - 1; i++) {
+                const d1 = new Date(history[i].completedAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+                const d2 = new Date(history[i + 1].completedAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+                const diff = (new Date(d1) - new Date(d2)) / 86400000;
+                if (diff >= 2) { ach.unlocked = true; newlyUnlocked = true; break; }
+              }
+            }
+            break;
+          }
+          case 'speed_run': {
+            if (history.some(h => (h.duration || 0) <= 5 && (h.duration || 0) > 0)) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          }
+          case 'work_horse': {
+            const c = history.filter(h => h.category === 'Work').length;
+            ach.progress = Math.min(c, ach.maxProgress || 5);
+            if (c >= 5) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          }
+          case 'personal_dev': {
+            const c = history.filter(h => h.category === 'Personal').length;
+            ach.progress = Math.min(c, ach.maxProgress || 5);
+            if (c >= 5) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          }
+          case 'perfect_week':
+            ach.progress = Math.min(streak, ach.maxProgress || 7);
+            if (streak >= 7) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'quest_100':
+            ach.progress = Math.min(totalQuests, ach.maxProgress || 100);
+            if (totalQuests >= 100) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'quest_250':
+            ach.progress = Math.min(totalQuests, ach.maxProgress || 250);
+            if (totalQuests >= 250) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'streak_60':
+            ach.progress = Math.min(streak, ach.maxProgress || 60);
+            if (streak >= 60) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'streak_100':
+            ach.progress = Math.min(streak, ach.maxProgress || 100);
+            if (streak >= 100) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
+          case 'focus_500':
+            ach.progress = Math.min(focusMins, ach.maxProgress || 500);
+            if (focusMins >= 500) { ach.unlocked = true; newlyUnlocked = true; }
+            break;
         }
       });
 
       if (newlyUnlocked) {
-        AudioEngine.playLevelUp();
-        this.showToast('🏆 New Achievement Unlocked!', 'success');
+        this.showToast('🏆 Achievement ready to claim! Go to Achievements.', 'success');
       }
     },
 
